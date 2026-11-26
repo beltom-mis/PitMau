@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="PitMau: editor e conversor de ficheiros no browser. Privado, sem uploads.">
+<title>PitMau · Ferramentas de ficheiros</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%234f7cff'/><path d='M9 24V8h8a5 5 0 010 10h-4' stroke='white' stroke-width='3' fill='none'/></svg>">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>PitMau</h1>
+  <nav role="tablist" aria-label="Ferramentas">
+    <button role="tab" class="tab on" data-t="ed" aria-selected="true">Editor de imagem</button>
+    <button role="tab" class="tab" data-t="pdf" aria-selected="false">Imagens para PDF</button>
+  </nav>
+  <span class="priv">Tudo corre no teu dispositivo</span>
+</header>
+
+<main>
+<section id="ed" class="view">
+  <div class="stage" id="stage">
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept="image/*" hidden>
+      <strong>Arrasta uma imagem ou toca para escolher</strong>
+      <small>PNG, JPG, WebP, GIF, BMP, AVIF</small>
+    </label>
+    <div class="wrap" id="wrap" hidden><canvas id="cv"></canvas><div id="sel"></div></div>
+  </div>
+
+  <aside class="panel" id="panel" aria-label="Opções">
+    <p id="info" class="muted">Sem imagem</p>
+    <div class="row">
+      <button id="undo" class="btn">Desfazer</button>
+      <button id="new" class="btn">Outra imagem</button>
+    </div>
+
+    <details open><summary>Transformar</summary>
+      <div class="row">
+        <button class="btn" data-a="rl">Rodar ⟲</button><button class="btn" data-a="rr">Rodar ⟳</button>
+        <button class="btn" data-a="fh">Espelhar ↔</button><button class="btn" data-a="fv">Espelhar ↕</button>
+      </div>
+      <p class="muted">Recortar: arrasta sobre a imagem.</p>
+      <button class="btn" id="crop">Aplicar recorte</button>
+      <div class="row">
+        <label>Largura <input type="number" id="w" min="1"></label>
+        <label>Altura <input type="number" id="h" min="1"></label>
+      </div>
+      <label class="chk"><input type="checkbox" id="lock" checked> Manter proporção</label>
+      <button class="btn" id="resize">Redimensionar</button>
+    </details>
+
+    <details><summary>Filtros</summary>
+      <label>Brilho <input class="f" id="br" type="range" min="0" max="200" data-d="100" value="100"></label>
+      <label>Contraste <input class="f" id="co" type="range" min="0" max="200" data-d="100" value="100"></label>
+      <label>Saturação <input class="f" id="sa" type="range" min="0" max="200" data-d="100" value="100"></label>
+      <label>Desfocar <input class="f" id="bl" type="range" min="0" max="20" data-d="0" value="0"></label>
+      <label>Preto e branco <input class="f" id="gr" type="range" min="0" max="100" data-d="0" value="0"></label>
+      <label>Sépia <input class="f" id="se" type="range" min="0" max="100" data-d="0" value="0"></label>
+      <div class="row"><button class="btn" id="fapply">Aplicar</button><button class="btn" id="freset">Repor</button></div>
+    </details>
+
+    <details><summary>Remover fundo</summary>
+      <p class="muted">Remove a cor do fundo. Por defeito usa o pixel do canto superior esquerdo.</p>
+      <div class="row"><button class="btn" id="pick">Escolher cor</button><span id="sw" class="sw" title="Cor do fundo"></span></div>
+      <label>Tolerância <input id="tol" type="range" min="1" max="100" value="25"></label>
+      <label>Suavidade <input id="fea" type="range" min="0" max="50" value="10"></label>
+      <button class="btn" id="rmbg">Remover fundo</button>
+    </details>
+
+    <details open><summary>Exportar</summary>
+      <div class="row">
+        <label>Formato
+          <select id="fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option><option value="image/webp">WebP</option></select>
+        </label>
+        <label>Qualidade <input type="range" id="qual" min="10" max="100" value="90"></label>
+      </div>
+      <button class="btn pri" id="save">Descarregar</button>
+    </details>
+  </aside>
+</section>
+
+<section id="pdf" class="view" hidden>
+  <div class="card">
+    <h2>Imagens para PDF</h2>
+    <p class="muted">Cada imagem vira uma página com o seu tamanho original. A ordem é a da lista.</p>
+    <label class="drop small"><input type="file" id="pfiles" accept="image/*" multiple hidden><strong>Adicionar imagens</strong></label>
+    <ol id="plist" class="plist"></ol>
+    <button class="btn pri" id="pmake">Gerar PDF</button>
+  </div>
+</section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="js/app.js"></script>
+</body>
+</html>
